@@ -16,14 +16,14 @@ func assemble(r io.Reader, w io.Writer) error {
 		return err
 	}
 
-	for _, instr := range file.Instructions {
-		word, err := encoding.Encode(&instr)
+	for _, instr := range file.Statements {
+		err := encoding.Encode(&instr, w)
 		if err != nil {
 			return err
 		}
-		if err := binary.Write(w, binary.LittleEndian, word); err != nil {
-			return err
-		}
+		// if err := binary.Write(w, binary.LittleEndian, word); err != nil {
+		// 	return err
+		// }
 	}
 
 	return nil
@@ -40,7 +40,7 @@ func dump(r io.Reader) {
 }
 
 func main() {
-	output := flag.String("output", "out.bin", "output file name")
+	output := flag.String("o", "out.bin", "output file name")
 
 	flag.Parse()
 

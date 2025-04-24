@@ -32,7 +32,7 @@ func ParseFile(r io.Reader) (file *ast.File, err error) {
 		if err != nil {
 			return nil, err
 		}
-		file.Instructions = append(file.Instructions, *instr)
+		file.Statements = append(file.Statements, instr)
 	}
 	return
 }
@@ -99,14 +99,37 @@ func (p *Parser) expect(kinds ...token.Kind) (tok *token.Token, err error) {
     return
 }
 
-func (p *Parser) ParseInstruction() (instr *ast.Instruction, err error) {
-	instr, err = p.parseInstruction()
+func (p *Parser) ParseInstruction() (stmt ast.Statement, err error) {
+	if p.test(token.Dot) {
+		stmt, err = p.parseStorage()
+	} else {
+		stmt, err = p.parseInstruction()
+	}
 
 	if err == nil {
 		_, err = p.expect(token.Newline)
 	}
 
 	return
+}
+
+func (p *Parser) parseStorage() (*ast.Storage, error) {
+	_, err := p.expect(token.Dot)
+	if err != nil {
+		return nil, err
+	}
+
+	tok, err := p.expect(token.Ident)
+	if err != nil {
+		return nil, err
+	}
+
+	ops, err := p.parseOperands()
+	if err != nil {
+		return nil, err
+	}
+
+	return &ast.Storage{Directive: tok, Operands: ops}, nil
 }
 
 func (p *Parser) parseInstruction() (*ast.Instruction, error) {

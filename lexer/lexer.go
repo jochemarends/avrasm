@@ -58,6 +58,11 @@ func (l *Lexer) Scan() (*token.Token, *Error) {
         return l.newToken(token.Dot, string(r)), nil
     case '\n':
         return l.newToken(token.Newline, string(r)), nil
+    case ';':
+		for l.scanner.Peek() != '\n' && l.scanner.Peek() != scanner.EOF {
+			l.scanner.Scan()
+		}
+		return l.Scan()
     }
 
     if isDigit(r) {

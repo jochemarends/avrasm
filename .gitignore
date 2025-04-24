@@ -1,1 +1,4 @@
 cmd/cmd
+avrasm
+main.S
+out.bin
