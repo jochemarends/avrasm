@@ -91,9 +91,9 @@ func (p *Parser) expect(kinds ...token.Kind) (tok *token.Token, err error) {
 		tok = p.currToken
     } else {
 		if p.nextToken == nil {
-			err = fmt.Errorf("@%d:%d: expected token of type `%v`", p.currToken.Pos.Line, p.currToken.Pos.Column, kinds)
+			err = fmt.Errorf("@%d:%d: expected token of type `%v`", p.nextToken.Pos.Line, p.nextToken.Pos.Column, kinds)
 		} else {
-			err = fmt.Errorf("@%d:%d: expected token of in `%v`, received `%v`", p.currToken.Pos.Line, p.currToken.Pos.Column, kinds, p.nextToken.Kind)
+			err = fmt.Errorf("@%d:%d: expected token of in `%v`, received `%v`", p.nextToken.Pos.Line, p.nextToken.Pos.Column, kinds, p.nextToken.Kind)
 		}
 	}
     return
